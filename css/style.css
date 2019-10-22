@@ -567,7 +567,7 @@ body {
   }
 }
 #header {
-  margin: 0 auto 2rem;
+  margin: 0 auto 12px;
   width: 100%;
 }
 #header h1,
@@ -606,6 +606,7 @@ body {
   font-weight: 200;
   font-style: normal;
   font-size: 0.8rem;
+  margin-top: 12px;
 }
 #header #nav ul {
   margin: 0;
