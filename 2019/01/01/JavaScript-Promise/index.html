@@ -15,7 +15,7 @@
 <meta property="og:description" content="嗨！大家好我是神Q超人！先前一陣子經過友人介紹認識了這個網站，但是由於先前已經有用習慣分享文章的平台，就遲遲未到此處發文，一直到參與完該平台舉辦的鐵人賽後，休息了好一陣子，最後沒有得獎也是很失落，於是想說在新的一年讓自己有個新開始！請大家多多指教！  認識 PromisePromise 是在 ES6 出現的語法，主要是針對 JavaScript 中非同步的執行緒做同步處理，所以在此之前，先來認識一">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;GG6Wxmt.png">
-<meta property="og:updated_time" content="2019-10-22T13:53:30.261Z">
+<meta property="og:updated_time" content="2019-10-23T04:25:41.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;GG6Wxmt.png">
     
@@ -99,7 +99,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#認識-Promise"><span class="toc-number">1.</span> <span class="toc-text">認識 Promise</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#非同步"><span class="toc-number">1.1.</span> <span class="toc-text">非同步</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Promise-基本用法"><span class="toc-number">2.</span> <span class="toc-text">Promise 基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Promise-進階用法"><span class="toc-number">3.</span> <span class="toc-text">Promise 進階用法</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#認識-Promise"><span class="toc-number">1.</span> <span class="toc-text">認識 Promise</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#非同步"><span class="toc-number">1.1.</span> <span class="toc-text">非同步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise-基本用法"><span class="toc-number">2.</span> <span class="toc-text">Promise 基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise-進階用法"><span class="toc-number">3.</span> <span class="toc-text">Promise 進階用法</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -145,16 +145,16 @@
   <div class="content" itemprop="articleBody">
     <p>嗨！大家好我是神Q超人！先前一陣子經過友人介紹認識了這個網站，但是由於先前已經有用習慣分享文章的平台，就遲遲未到此處發文，一直到參與完該平台舉辦的鐵人賽後，休息了好一陣子，最後沒有得獎也是很失落，於是想說在新的一年讓自己有個新開始！請大家多多指教！</p>
 <hr>
-<h1 id="認識-Promise"><a href="#認識-Promise" class="headerlink" title="認識 Promise"></a>認識 Promise</h1><p>Promise 是在 ES6 出現的語法，主要是針對 JavaScript 中非同步的執行緒做同步處理，所以在此之前，先來認識一下非同步是什麼意思。</p>
-<h2 id="非同步"><a href="#非同步" class="headerlink" title="非同步"></a>非同步</h2><p>非同步處理方式會在不等待每一行的程式執行完成的狀態下不斷向下一行執行，例如：</p>
+<h2 id="認識-Promise"><a href="#認識-Promise" class="headerlink" title="認識 Promise"></a>認識 Promise</h2><p>Promise 是在 ES6 出現的語法，主要是針對 JavaScript 中非同步的執行緒做同步處理，所以在此之前，先來認識一下非同步是什麼意思。</p>
+<h3 id="非同步"><a href="#非同步" class="headerlink" title="非同步"></a>非同步</h3><p>非同步處理方式會在不等待每一行的程式執行完成的狀態下不斷向下一行執行，例如：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'init'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> func = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  str=<span class="string">'changed'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">setTimeout(func,<span class="number">3000</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(str); <span class="comment">// ''</span></span><br></pre></td></tr></table></figure>
 
 <p>以上的程式區段會以下列的順序做執行：</p>
 <ol>
-<li>宣告字串 str ，並指派值為 init 。</li>
-<li>宣告方法 func ，作用為改變字串 str 的值為 changed 。</li>
-<li>使用 setTimeout 在三秒後執行 func 改變 str 的值。</li>
-<li>在 console 中印出字串 str 的值。</li>
+<li>宣告字串 <code>str</code>，並指派值為 <code>init</code>。</li>
+<li>宣告方法 <code>func</code>，作用為改變字串 <code>str</code> 的值為 <code>changed</code>。</li>
+<li>使用 <code>setTimeout</code> 在三秒後執行 <code>func</code> 改變 <code>str</code> 的值。</li>
+<li>在 console 中印出字串 <code>str</code> 的值。</li>
 </ol>
 <p>關鍵就在上方的第 3 和第 4 步，在印出 <code>console.log</code> 時，程式並不會等到 <code>setTimeout</code> 執行完，而是 JacaScript 確認在第 3 步的 <code>setTimeout</code> 時，就會繼續向下執行程式，直到三秒後才回過頭執行 <code>func</code> 改變 <code>str</code> 的值。</p>
 <p>雖然使用非同步可以讓執行速度不會因為某一行程式而卡住整個頁面，但有時候還是得先利用 ajax 獲取資料，再繼續執行處理資料的程式碼。</p>
@@ -163,7 +163,7 @@
 
 <p>但因現今前端工程在網頁中的份量越來越重的關係，需要處理同步處理的地方也越來越多， Promise 就這樣誕生了。</p>
 <hr>
-<h1 id="Promise-基本用法"><a href="#Promise-基本用法" class="headerlink" title="Promise 基本用法"></a>Promise 基本用法</h1><p>如上段所說， Promise 是用來處理同步的部分，再說明用法前先來用圖片簡單瞭解一下原理：</p>
+<h2 id="Promise-基本用法"><a href="#Promise-基本用法" class="headerlink" title="Promise 基本用法"></a>Promise 基本用法</h2><p>如上段所說， Promise 是用來處理同步的部分，再說明用法前先來用圖片簡單瞭解一下原理：</p>
 <p><img src="https://i.imgur.com/GG6Wxmt.png" alt=""></p>
 <div style="display:flex; justify-content:center">
 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">圖片來源：https://developer.mozilla.org</a>
@@ -174,7 +174,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newPromise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Math</span>.random() &gt; <span class="number">0.5</span>) &#123;</span><br><span class="line">      resolve(<span class="string">'changed'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    reject(<span class="string">'error'</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <p>上方的在 <code>setTimeout</code> 內加上了 <code>Math.random()</code> 取亂數（會回傳 0~1 之間的值），並藉由判斷該亂數是否大於 0.5 來模擬兩種情況，當大於時代表成功，小於時代表失敗，當然！ <code>.catch</code> 也和 <code>.then</code> 相同，在沒有 Promise 內的 <code>reject</code> 呼叫下是不會執行的。</p>
-<h1 id="Promise-進階用法"><a href="#Promise-進階用法" class="headerlink" title="Promise 進階用法"></a>Promise 進階用法</h1><p>經過基本用法，知道了 <code>.then</code> 能夠在 Promise 中以 resolve 做同步的執行呼叫，但是 <code>.then</code> 本身也可以擁有回傳值，並由下一個 <code>.then</code> 做接收，繼續執行：</p>
+<h2 id="Promise-進階用法"><a href="#Promise-進階用法" class="headerlink" title="Promise 進階用法"></a>Promise 進階用法</h2><p>經過基本用法，知道了 <code>.then</code> 能夠在 Promise 中以 resolve 做同步的執行呼叫，但是 <code>.then</code> 本身也可以擁有回傳值，並由下一個 <code>.then</code> 做接收，繼續執行：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newPromise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123; resolve(<span class="string">'changed'</span>); &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);  <span class="comment">// 'changed'</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">'last changed'</span>;</span><br><span class="line">&#125;).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);  <span class="comment">// 'last changed'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <p>第二個 <code>.then</code> 會接收上一個 <code>.then</code> 的回傳值，並將它印出，但是需要注意的是，這種多個 <code>.then</code> 的用法，並不適用於同步執行，也就是說只要脫離了 Promise 就會回到非同步，例如以下例子：</p>
@@ -217,7 +217,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#認識-Promise"><span class="toc-number">1.</span> <span class="toc-text">認識 Promise</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#非同步"><span class="toc-number">1.1.</span> <span class="toc-text">非同步</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Promise-基本用法"><span class="toc-number">2.</span> <span class="toc-text">Promise 基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Promise-進階用法"><span class="toc-number">3.</span> <span class="toc-text">Promise 進階用法</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#認識-Promise"><span class="toc-number">1.</span> <span class="toc-text">認識 Promise</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#非同步"><span class="toc-number">1.1.</span> <span class="toc-text">非同步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise-基本用法"><span class="toc-number">2.</span> <span class="toc-text">Promise 基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise-進階用法"><span class="toc-number">3.</span> <span class="toc-text">Promise 進階用法</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
