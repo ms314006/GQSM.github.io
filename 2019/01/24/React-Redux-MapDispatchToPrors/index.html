@@ -6,17 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="React 與他的快樂小夥伴 Redux -事件處理（Handling events） 在上篇文章中，提到了 React 如何向 Redux 要求 store 中管理的資料，本篇會延續該篇文章內的程式碼接著說明，如果 React 要對資料進行異動，該怎麼做才好。  建立事件其實建立事件並不難，首先在 Reducer 內部描述事件運作，再由 store 的內部函式 dispatch 讓 store">
+    <meta name="description" content="React 與他的快樂小夥伴 Redux -事件處理（Handling events）  React 觸發 Readux 事件方式   在上篇文章中，提到了 React 如何向 Redux 要求 store 中管理的資料，本篇會延續該篇文章內的程式碼接著說明，如果 React 要對資料進行異動，該怎麼做才好。  建立事件其實建立事件並不難，首先在 Reducer 內部描述事件運作，再由 store">
 <meta name="keywords" content="React,Reactjs,React Redux,Redux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React 與他的快樂小夥伴 Redux -事件處理（Handling events）">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;01&#x2F;24&#x2F;React-Redux-MapDispatchToPrors&#x2F;index.html">
 <meta property="og:site_name" content="神Ｑ超人">
-<meta property="og:description" content="React 與他的快樂小夥伴 Redux -事件處理（Handling events） 在上篇文章中，提到了 React 如何向 Redux 要求 store 中管理的資料，本篇會延續該篇文章內的程式碼接著說明，如果 React 要對資料進行異動，該怎麼做才好。  建立事件其實建立事件並不難，首先在 Reducer 內部描述事件運作，再由 store 的內部函式 dispatch 讓 store">
+<meta property="og:description" content="React 與他的快樂小夥伴 Redux -事件處理（Handling events）  React 觸發 Readux 事件方式   在上篇文章中，提到了 React 如何向 Redux 要求 store 中管理的資料，本篇會延續該篇文章內的程式碼接著說明，如果 React 要對資料進行異動，該怎麼做才好。  建立事件其實建立事件並不難，首先在 Reducer 內部描述事件運作，再由 store">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;4904&#x2F;1*FmQ-t6jRIvWriPBAYXyxLg.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;1528&#x2F;1*Q3l6NeVW_kN39iPqBIrqkQ.gif">
-<meta property="og:updated_time" content="2019-11-28T23:09:18.561Z">
+<meta property="og:updated_time" content="2019-11-28T23:12:54.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;4904&#x2F;1*FmQ-t6jRIvWriPBAYXyxLg.png">
     
@@ -146,7 +146,11 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="React-與他的快樂小夥伴-Redux-事件處理（Handling-events）"><a href="#React-與他的快樂小夥伴-Redux-事件處理（Handling-events）" class="headerlink" title="React 與他的快樂小夥伴 Redux -事件處理（Handling events）"></a>React 與他的快樂小夥伴 Redux -事件處理（Handling events）</h2><p><img class="dz t u hi ak" src="https://miro.medium.com/max/4904/1*FmQ-t6jRIvWriPBAYXyxLg.png" role="presentation"><br/></p>
+    <h2 id="React-與他的快樂小夥伴-Redux-事件處理（Handling-events）"><a href="#React-與他的快樂小夥伴-Redux-事件處理（Handling-events）" class="headerlink" title="React 與他的快樂小夥伴 Redux -事件處理（Handling events）"></a>React 與他的快樂小夥伴 Redux -事件處理（Handling events）</h2><img class="dz t u hi ak" src="https://miro.medium.com/max/4904/1*FmQ-t6jRIvWriPBAYXyxLg.png" role="presentation">
+<div style="display:flex; justify-content:center">
+<a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">React 觸發 Readux 事件方式</a>
+</div><br/>
+
 <p>在<a class="dj by il im in io" target="_blank" rel="noopener" href="https://ms314006.github.io/2019/01/07/React-Redux-MapStateToPrors/">上篇文章</a>中，提到了 <code class="hm ip iq ir is b">React</code> 如何向 <code class="hm ip iq ir is b">Redux</code> 要求 <code class="hm ip iq ir is b">store</code> 中管理的資料，本篇會延續該篇文章內的程式碼接著說明，如果 <code class="hm ip iq ir is b">React</code> 要對資料進行異動，該怎麼做才好。</p>
 <hr>
 <h2 id="建立事件"><a href="#建立事件" class="headerlink" title="建立事件"></a>建立事件</h2><p>其實建立事件並不難，首先在 <code class="hm ip iq ir is b">Reducer</code> 內部描述事件運作，再由 <code class="hm ip iq ir is b">store</code> 的內部函式 <code class="hm ip iq ir is b">dispatch</code> 讓 <code class="hm ip iq ir is b">store</code> 觸發 <code class="hm ip iq ir is b">Reducer</code> 執行，最後 <code class="hm ip iq ir is b">Reducer</code> 會儲存最後改變的 <code class="hm ip iq ir is b">state</code> 並將它回傳。</p>
