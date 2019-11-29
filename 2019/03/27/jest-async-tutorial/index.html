@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Jest | 跨越同步執行的 Jest 測試            同步執行使測試結果出現問題           前言上一篇「讓 Jest 為你的 Code 做測試-基礎用法教學」中提到了如何使用 Jest 做單元測試，但是 JavaScript 是屬於同步執行的程式碼，這種特性會使 Jest 在測試結果出現問題，本篇會針對這點來講解關於異步測試的方法。  異步測試測試流程首先建立一個用 set">
+<meta name="keywords" content="Unit Testing,Jest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jest | 跨越同步執行的 Jest 測試">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;03&#x2F;27&#x2F;jest-async-tutorial&#x2F;index.html">
+<meta property="og:site_name" content="神Ｑ超人">
+<meta property="og:description" content="Jest | 跨越同步執行的 Jest 測試            同步執行使測試結果出現問題           前言上一篇「讓 Jest 為你的 Code 做測試-基礎用法教學」中提到了如何使用 Jest 做單元測試，但是 JavaScript 是屬於同步執行的程式碼，這種特性會使 Jest 在測試結果出現問題，本篇會針對這點來講解關於異步測試的方法。  異步測試測試流程首先建立一個用 set">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;5000&#x2F;1*-cMiZdiWPgJXf45aXZgd5Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;2348&#x2F;1*MHX0_s7j43ZOskPYi7k9sQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;2356&#x2F;1*_l_TlHzblrccb6_q-5Hwqg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;2308&#x2F;1*TL0MzoVpZW0FAPvgG-5QAg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;2852&#x2F;1*iJSfXFmId2Ci-_RkDAICxw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;3676&#x2F;1*ADb294uKDf2j0PmxraDOHA.png">
+<meta property="og:updated_time" content="2019-11-29T10:44:30.683Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;miro.medium.com&#x2F;max&#x2F;5000&#x2F;1*-cMiZdiWPgJXf45aXZgd5Q.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Jest | 跨越同步執行的 Jest 測試</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/ms314006" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/03/25/jest-basic-tutorial/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/27/jest-async-tutorial/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&text=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&is_video=false&description=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Jest | 跨越同步執行的 Jest 測試&body=Check out this article: http://yoursite.com/2019/03/27/jest-async-tutorial/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&name=Jest | 跨越同步執行的 Jest 測試&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Jest-跨越同步執行的-Jest-測試"><span class="toc-number">1.</span> <span class="toc-text">Jest | 跨越同步執行的 Jest 測試</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">2.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#異步測試"><span class="toc-number">3.</span> <span class="toc-text">異步測試</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#測試流程"><span class="toc-number">3.1.</span> <span class="toc-text">測試流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#發現問題"><span class="toc-number">3.2.</span> <span class="toc-text">發現問題</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解決問題"><span class="toc-number">3.3.</span> <span class="toc-text">解決問題</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-Promise"><span class="toc-number">3.4.</span> <span class="toc-text">使用 Promise</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Jest | 跨越同步執行的 Jest 測試
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">神Ｑ超人</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-26T16:06:20.000Z" itemprop="datePublished">2019-03-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Jest/" rel="tag">Jest</a>, <a class="tag-link" href="/tags/Unit-Testing/" rel="tag">Unit Testing</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Jest-跨越同步執行的-Jest-測試"><a href="#Jest-跨越同步執行的-Jest-測試" class="headerlink" title="Jest | 跨越同步執行的 Jest 測試"></a>Jest | 跨越同步執行的 Jest 測試</h2><p><img class="dz t u hi ak" src="https://miro.medium.com/max/5000/1*-cMiZdiWPgJXf45aXZgd5Q.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>同步執行使測試結果出現問題</span><br>          </div><br/></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇「<a class="dj by iy iz ja jb" target="_blank" rel="noopener" href="/enjoy-life-enjoy-coding/讓-jest-為你的-code-做單元測試-基礎用法教學-d898f11d9a23">讓 Jest 為你的 Code 做測試-基礎用法教學</a>」中提到了如何使用 <code class="hm jc jd je jf b">Jest</code> 做單元測試，但是 <code class="hm jc jd je jf b">JavaScript</code> 是屬於同步執行的程式碼，這種特性會使 <code class="hm jc jd je jf b">Jest</code> 在測試結果出現問題，本篇會針對這點來講解關於異步測試的方法。</p>
+<hr>
+<h2 id="異步測試"><a href="#異步測試" class="headerlink" title="異步測試"></a>異步測試</h2><h3 id="測試流程"><a href="#測試流程" class="headerlink" title="測試流程"></a>測試流程</h3><p>首先建立一個用 <code class="hm jc jd je jf b">setTimeout</code> 的延遲模擬請求獲取資料的 <code class="hm jc jd je jf b">function</code> ，獲取後再將資料傳到 <code class="hm jc jd je jf b">callBack</code> 中執行。</p>
+<p>這裡將函式 <code class="hm jc jd je jf b">fetchData</code> 放在 <code class="hm jc jd je jf b">./func/async.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//傳入一個 callBack 函數，在獲取資料時執行</span></span><br><span class="line"><span class="keyword">const</span> fetchData = <span class="function">(<span class="params">callBack</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123; </span><br><span class="line">        callBack(<span class="string">'getData'</span>) </span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//將該 fetchData 函式匯出</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    fetchData: fetchData</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>建立測試檔案 <code class="hm jc jd je jf b">./<strong>test</strong>/async.test.js</code> ，在檔案中匯入 <code class="hm jc jd je jf b">fetchData</code> ，並在 <code class="hm jc jd je jf b">callBack</code> 函式內設定斷言，測試 <code class="hm jc jd je jf b">fetchData</code> 回傳的資料是否符合期望值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'../funcs/async.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//建立測試</span></span><br><span class="line">test(<span class="string">'test async'</span>, () =&gt; &#123;]</span><br><span class="line">    <span class="comment">//callBack 會在 fetchData 取得資料後執行</span></span><br><span class="line">    <span class="keyword">const</span> callBack = <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toBe(<span class="string">'getData'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//將上方的 callBack 函式傳入 fetchData 中</span></span><br><span class="line">    <span class="keyword">async</span>.fetchData(callBack)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>完成以上設置後，便可以執行測試了，這裡使用能夠產生覆蓋率報告的測試指令，會得到以下結果：</p>
+<p><img class="dz t u hi ak" src="https://miro.medium.com/max/2348/1*MHX0_s7j43ZOskPYi7k9sQ.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>測試結果顯示正確，但覆蓋率卻不是 100 %</span><br>          </div><br/></p>
+<p>可以看到結果是 <code class="hm jc jd je jf b">PASS</code> ，也就是說 <code class="hm jc jd je jf b">callBack</code> 接收到的斷言和我們期望的值相同，但是卻發現測試的覆蓋率卻不是 100 %，代表在 <code class="hm jc jd je jf b">fetchData</code> 中有些地方沒有執行到，測試就已經結束了，這時可以點開 <code class="hm jc jd je jf b">./coverage/Icov-report</code> 內關於 <code class="hm jc jd je jf b">async.js</code> 的執行報告來看：</p>
+<p><img class="dz t u hi ak" src="https://miro.medium.com/max/2356/1*_l_TlHzblrccb6_q-5Hwqg.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>在測試時根本沒跑進 callBack 中</span><br>          </div><br/></p>
+<h3 id="發現問題"><a href="#發現問題" class="headerlink" title="發現問題"></a>發現問題</h3><p>經過上方的操作，可以發現就算在測試中 <code class="hm jc jd je jf b">JavaScript</code> 也是一如既往同步執行，不會等到 <code class="hm jc jd je jf b">callBack</code> 執行，也不會到設定的斷言，整個測試就已經結束了。</p>
+<p>這裡可以將代碼改為更直接的方式測試：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'../funcs/async.js'</span>)</span><br><span class="line"></span><br><span class="line">test(<span class="string">'test async'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> callBack = <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">//將斷言中的結果傳入空值，期望值為 'getData' 不變</span></span><br><span class="line">        expect(<span class="string">''</span>).toBe(<span class="string">'getData'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">async</span>.fetchData(callBack)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>有興趣可以試試上方的測試，結果依然會是 <code class="hm jc jd je jf b">PASS</code> ，因為 <code class="hm jc jd je jf b">callBack</code> 函式根本就沒有執行到。</p>
+<h3 id="解決問題"><a href="#解決問題" class="headerlink" title="解決問題"></a>解決問題</h3><p>雖然在 <code class="hm jc jd je jf b">JavaScript</code> 中，處理同步問題一直不是輕鬆的事情，但是 <code class="hm jc jd je jf b">Jest</code> 在執行測試的時候可以透過 <code class="hm jc jd je jf b">done()</code> 來應付這個狀況。</p>
+<p>簡單來說，如果在測試裡有加入 <code class="hm jc jd je jf b">done()</code> ，那只要還沒執行到 <code class="hm jc jd je jf b">done()</code> 就不算結束測試，因此可以將它加入上方的程式裡：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'../funcs/async.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//將 done 傳入測試中</span></span><br><span class="line">test(<span class="string">'test async'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> callBack = <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toBe(<span class="string">'getData'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//在 callBack 函式內的斷言後加上 done</span></span><br><span class="line">        done()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">async</span>.fetchData(callBack)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>加入 <code class="hm jc jd je jf b">done()</code> 後重新執行測試，就可以看到報告呈現了完美的一片綠光。</p>
+<p><img class="dz t u hi ak" src="https://miro.medium.com/max/2308/1*TL0MzoVpZW0FAPvgG-5QAg.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>測試覆蓋率已達 100 %</span><br>          </div><br/></p>
+<p>需要注意的是，如果測試中有傳入 <code class="hm jc jd je jf b">done</code> 但卻未執行它，那麼該測試結果就會出現 <code class="hm jc jd je jf b">FAIL</code> 失敗：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'../funcs/async.js'</span>)</span><br><span class="line"></span><br><span class="line">test(<span class="string">'test async'</span>, (done) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> callBack = <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toBe(<span class="string">'getData'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">async</span>.fetchData(callBack)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>執行測試結果如下：</p>
+<p><img class="dz t u hi ak" src="https://miro.medium.com/max/2852/1*iJSfXFmId2Ci-_RkDAICxw.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>測試時擁有參數 done 卻未執行，測試會產生錯誤</span><br>          </div><br/></p>
+<h3 id="使用-Promise"><a href="#使用-Promise" class="headerlink" title="使用 Promise"></a>使用 Promise</h3><p>如果既有的程式碼已使用 <code class="hm jc jd je jf b">Promise</code> 處理同步，便不必再使用 <code class="hm jc jd je jf b">done</code> ，直接以 <code class="hm jc jd je jf b">.then</code> 接收 <code class="hm jc jd je jf b">Promise</code> 物件傳進 <code class="hm jc jd je jf b">resolve</code> 的結果即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promiseFetchData = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">            resolve(<span class="string">'getData'</span>)</span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    promiseFetchData: promiseFetchData</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'../funcs/async.js'</span>)</span><br><span class="line"></span><br><span class="line">test(<span class="string">'test promise async'</span>, ()=&gt;&#123;</span><br><span class="line">    <span class="comment">//return 是必須的，否則不會執行 .then 的內容</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">async</span>.promiseFetchData()</span><br><span class="line">        .then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">            expect(data).toBe(<span class="string">'getData'</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，在測試的 <code class="hm jc jd je jf b">function</code> 中必須加上 <code class="hm jc jd je jf b">return</code> ，否則測試不會跑進 <code class="hm jc jd je jf b">.then</code> 中，只會在 <code class="hm jc jd je jf b">Promise</code> 將結果送進 <code class="hm jc jd je jf b">resolve</code> 時就結束了，另外！當 <code class="hm jc jd je jf b">Promise</code> 中的結果跑進 <code class="hm jc jd je jf b">reject</code> 那測試也會產生錯誤。</p>
+<p>測試結果得到 <code class="hm jc jd je jf b">PASS</code> ，覆蓋率也是 100 %：</p>
+<p><img class="dz t u hi ak" src="https://miro.medium.com/max/3676/1*ADb294uKDf2j0PmxraDOHA.png" role="presentation"><div style="display:flex; justify-content:center; font-size: 12px"><br>            <span>使用 Promise 測試的結果</span><br>          </div><br/></p>
+<p>上述說明了成功的 <code class="hm jc jd je jf b">resolve</code> 在測試中用 <code class="hm jc jd je jf b">.then</code> 接收，而失敗的 <code class="hm jc jd je jf b">reject</code> 則是使用 <code class="hm jc jd je jf b">.catch</code> 處理接下來的動作，這部分和 <code class="hm jc jd je jf b">Promise</code> 的操作都相同，就不再闡述，如果對 <code class="hm jc jd je jf b">Promise</code> 不熟，可以參考「<a class="dj by iy iz ja jb" target="_blank" rel="noopener" href="/enjoy-life-enjoy-coding/javascript-從promise開始承諾的部落格生活-e20dba78732f">JacaScript | 從Promise開始承諾的部落格生活</a>」。</p>
+<p><code class="hm jc jd je jf b">Jest</code> 在 <code class="hm jc jd je jf b">expect</code> 內還另外擁有兩個內建屬性來針對 <code class="hm jc jd je jf b">Promise</code> 做處理，分別為 <code class="hm jc jd je jf b">resolves</code> 及 <code class="hm jc jd je jf b">rejects</code> ，他們會直接捕捉 <code class="hm jc jd je jf b">Promise</code> 傳進<code class="hm jc jd je jf b">resolve</code> 或 <code class="hm jc jd je jf b">reject</code> 的資料判斷是否符合期望值，這裡以 <code class="hm jc jd je jf b">rejects</code> 作為例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promiseErrorFetchData = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">            reject(<span class="string">'error'</span>)</span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    promiseErrorFetchData: promiseErrorFetchData</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>測試時，直接將 <code class="hm jc jd je jf b">promiseErrorFetchData</code> 作為參數傳遞給 <code class="hm jc jd je jf b">expect</code> ，並透過 <code class="hm jc jd je jf b">expect</code> 的內建屬性 <code class="hm jc jd je jf b">rejects</code> 取得 <code class="hm jc jd je jf b">promiseErrorFetchData</code> 中 <code class="hm jc jd je jf b">Promise</code> 傳進 <code class="hm jc jd je jf b">reject</code> 的資料下斷言：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test(<span class="string">'test rejects in promise'</span>,()=&gt;&#123;</span><br><span class="line">    <span class="comment">//return 是必須的，否則不會等 Promise 執行到 reject 測試就結束了</span></span><br><span class="line">    <span class="keyword">return</span> expect(<span class="keyword">async</span>.promiseErrorFetchData()).rejects.toBe(<span class="string">'error'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>這個方式筆者認為能夠更直覺性的使用 <code class="hm jc jd je jf b">Promise</code> 的測試，得到的結果也都和上方一樣，但主要還是配合團隊使用其中一種，才不會讓測試代碼顯得雜亂，當然！個人開發也是一樣。</p>
+<hr>
+<p>本文針對異步請求在測試內產生的問題舉了幾個例子解決，但其實官網上還有提出一種使用 <code class="hm jc jd je jf b">async/await</code> 的方式，不過筆者還未學習到 <code class="hm jc jd je jf b">JavaScript</code> 中關於 <code class="hm jc jd je jf b">async</code> 及 <code class="hm jc jd je jf b">await</code> 的用法，因此怕現階段會誤導大家，就等日後使用到再回來補充文章內容。</p>
+<p>如果文章中有任何問題，或是不理解的地方，都可以留言告訴我！謝謝大家！</p>
+<p>參考文章</p>
+<ol>
+<li id="223c" class="ik il em at im b in kg ip kh ir ki it kj iv kk ix kw kx ky"><a href="https://jestjs.io/docs/en/asynchronous#async-await" class="dj by iy iz ja jb" target="_blank" rel="noopener nofollow">https://jestjs.io/docs/en/asynchronous#async-await</a></li>
+</ol>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/ms314006" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Jest-跨越同步執行的-Jest-測試"><span class="toc-number">1.</span> <span class="toc-text">Jest | 跨越同步執行的 Jest 測試</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">2.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#異步測試"><span class="toc-number">3.</span> <span class="toc-text">異步測試</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#測試流程"><span class="toc-number">3.1.</span> <span class="toc-text">測試流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#發現問題"><span class="toc-number">3.2.</span> <span class="toc-text">發現問題</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解決問題"><span class="toc-number">3.3.</span> <span class="toc-text">解決問題</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-Promise"><span class="toc-number">3.4.</span> <span class="toc-text">使用 Promise</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/27/jest-async-tutorial/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&text=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&is_video=false&description=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Jest | 跨越同步執行的 Jest 測試&body=Check out this article: http://yoursite.com/2019/03/27/jest-async-tutorial/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&title=Jest | 跨越同步執行的 Jest 測試" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/27/jest-async-tutorial/&name=Jest | 跨越同步執行的 Jest 測試&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 GQSM
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/ms314006" target="_blank" rel="noopener">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
